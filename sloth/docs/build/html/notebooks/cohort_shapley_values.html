@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cohort Shapley Values &mdash; sloth  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sloth
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sloth/index.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sloth</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Cohort Shapley Values</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/cohort_shapley_values.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Cohort-Shapley-Values">
+<h1>Cohort Shapley Values<a class="headerlink" href="#Cohort-Shapley-Values" title="Permalink to this heading"></a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;C:/Users/dsoellheim/PycharmProjects/&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sloth</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sloth&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">ModuleNotFoundError</span>                       Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[1], line 5</span>
+<span class="ansi-green-fg">      3</span> sys<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>append(<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">C:/Users/dsoellheim/PycharmProjects/</span><span style="color: rgb(175,0,0)">&#39;</span>)
+<span class="ansi-green-fg">      4</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> <span class="ansi-bold" style="color: rgb(0,0,255)">logging</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> <span class="ansi-bold" style="color: rgb(0,0,255)">sloth</span>
+<span class="ansi-green-fg">      7</span> logging<span style="color: rgb(98,98,98)">.</span>basicConfig()
+<span class="ansi-green-fg">      8</span> logger <span style="color: rgb(98,98,98)">=</span> logging<span style="color: rgb(98,98,98)">.</span>getLogger(<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">sloth</span><span style="color: rgb(175,0,0)">&#39;</span>)
+
+<span class="ansi-red-intense-fg ansi-bold">ModuleNotFoundError</span>: No module named &#39;sloth&#39;
+</pre></div></div>
+</div>
+<section id="Simple-validation-task">
+<h2>Simple validation task<a class="headerlink" href="#Simple-validation-task" title="Permalink to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get a sample validation task from a synthetic credit default model</span>
+<span class="n">validation_task</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">test_sets</span><span class="o">.</span><span class="n">simple_regression_ordinal_discrete_ohe</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1_000</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cohort_shap_values</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">local_explainers</span><span class="o">.</span><span class="n">CohortShapleyValues</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span> <span class="n">similarity_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[2], line 2</span>
+<span class="ansi-green-fg">      1</span> <span style="color: rgb(95,135,135)"># get a sample validation task from a synthetic credit default model</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 2</span> validation_task <span style="color: rgb(98,98,98)">=</span> sloth<span style="color: rgb(98,98,98)">.</span>datasets<span style="color: rgb(98,98,98)">.</span>test_sets<span style="color: rgb(98,98,98)">.</span>simple_regression_ordinal_discrete_ohe(n_samples<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">1_000</span>, x<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">0</span>, f<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">0</span>)
+<span class="ansi-green-fg">      3</span> cohort_shap_values <span style="color: rgb(98,98,98)">=</span> sloth<span style="color: rgb(98,98,98)">.</span>explainers<span style="color: rgb(98,98,98)">.</span>local_explainers<span style="color: rgb(98,98,98)">.</span>CohortShapleyValues(validation_task, similarity_ratio<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">1.0</span>)
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;sloth&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">cohort_shap_values</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[3], line 1</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span> cs <span style="color: rgb(98,98,98)">=</span> cohort_shap_values<span style="color: rgb(98,98,98)">.</span>explain(validation_task<span style="color: rgb(98,98,98)">.</span>data[<span style="color: rgb(98,98,98)">0</span>,:])
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;cohort_shap_values&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cs</span><span class="o">.</span><span class="n">shap_values</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[4], line 1</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span> cs<span style="color: rgb(98,98,98)">.</span>shap_values
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;cs&#39; is not defined
+</pre></div></div>
+</div>
+</section>
+<section id="Biased-Dataset">
+<h2>Biased Dataset<a class="headerlink" href="#Biased-Dataset" title="Permalink to this heading"></a></h2>
+<p>The feature corr_feat, correlated with feature_1 in the data set, that is not included in the model, is incorrectly shown in the beeswarm plot to have an impact on the SHAP values.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sloth.datasets.credit_default2</span> <span class="k">as</span> <span class="nn">biased_dataset</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">ModuleNotFoundError</span>                       Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[5], line 1</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> <span class="ansi-bold" style="color: rgb(0,0,255)">sloth</span><span class="ansi-bold" style="color: rgb(0,0,255)">.</span><span class="ansi-bold" style="color: rgb(0,0,255)">datasets</span><span class="ansi-bold" style="color: rgb(0,0,255)">.</span><span class="ansi-bold" style="color: rgb(0,0,255)">credit_default2</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> <span class="ansi-bold" style="color: rgb(0,0,255)">biased_dataset</span>
+
+<span class="ansi-red-intense-fg ansi-bold">ModuleNotFoundError</span>: No module named &#39;sloth&#39;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">validation_task</span> <span class="o">=</span> <span class="n">biased_dataset</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="n">cohort_shap_values</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">local_explainers</span><span class="o">.</span><span class="n">CohortShapleyValues</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span> <span class="n">bool_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[6], line 1</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span> validation_task <span style="color: rgb(98,98,98)">=</span> biased_dataset<span style="color: rgb(98,98,98)">.</span>get()
+<span class="ansi-green-fg">      2</span> cohort_shap_values <span style="color: rgb(98,98,98)">=</span> sloth<span style="color: rgb(98,98,98)">.</span>explainers<span style="color: rgb(98,98,98)">.</span>local_explainers<span style="color: rgb(98,98,98)">.</span>CohortShapleyValues(validation_task, bool_error<span style="color: rgb(98,98,98)">=</span><span class="ansi-bold" style="color: rgb(0,135,0)">False</span>)
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;biased_dataset&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cs</span> <span class="o">=</span> <span class="n">cohort_shap_values</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">50</span><span class="p">,:])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[7], line 1</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span> cs <span style="color: rgb(98,98,98)">=</span> cohort_shap_values<span style="color: rgb(98,98,98)">.</span>explain(validation_task<span style="color: rgb(98,98,98)">.</span>data[<span style="color: rgb(98,98,98)">0</span>:<span style="color: rgb(98,98,98)">50</span>,:])
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;cohort_shap_values&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cs</span><span class="o">.</span><span class="n">plot_beeswarm</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[8], line 1</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span> cs<span style="color: rgb(98,98,98)">.</span>plot_beeswarm()
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;cs&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cs</span><span class="o">.</span><span class="n">plot_bar</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[9], line 1</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span> cs<span style="color: rgb(98,98,98)">.</span>plot_bar(row<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">0</span>)
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;cs&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#explanation = ShapExplanation(cs.shapley_values)</span>
+<span class="c1">#max_id = np.argmax(validation_task.y_pred)</span>
+<span class="n">max_ids</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">validation_task</span><span class="o">.</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">max_ids</span><span class="p">)):</span>
+    <span class="n">dev</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">cohort_shap_values</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">max_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">dev</span><span class="p">:</span><span class="n">max_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">dev</span><span class="p">,:])</span> <span class="c1">#:-1</span>
+    <span class="n">cs</span><span class="o">.</span><span class="n">plot_bar</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">dev</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[10], line 3</span>
+<span class="ansi-green-fg">      1</span> <span style="color: rgb(95,135,135)">#explanation = ShapExplanation(cs.shapley_values)</span>
+<span class="ansi-green-fg">      2</span> <span style="color: rgb(95,135,135)">#max_id = np.argmax(validation_task.y_pred)</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 3</span> max_ids <span style="color: rgb(98,98,98)">=</span> (<span style="color: rgb(98,98,98)">-</span>validation_task<span style="color: rgb(98,98,98)">.</span>y_pred)<span style="color: rgb(98,98,98)">.</span>argsort()[:<span style="color: rgb(98,98,98)">3</span>]
+<span class="ansi-green-fg">      4</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> i <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">range</span>(<span style="color: rgb(0,135,0)">len</span>(max_ids)):
+<span class="ansi-green-fg">      5</span>     dev <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(98,98,98)">10</span>
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;validation_task&#39; is not defined
+</pre></div></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

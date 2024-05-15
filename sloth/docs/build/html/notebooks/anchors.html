@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anchors &mdash; sloth  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../user_guide/examples.html" />
+    <link rel="prev" title="Individual Conditional Expectations (ICE)" href="ice.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sloth
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide/index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/datasets_models.html">Datasets and Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/global_model_agnostic_methods.html">Global Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide/local_model_agnostic_methods.html">Local Model-Agnostic Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ice.html">Individual Conditional Expectations (ICE)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Anchors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Ordinal-Values">Ordinal Values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Ordinal-and-Categoric">Ordinal and Categoric</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../sloth/index.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sloth</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide/index.html">User Guide</a></li>
+          <li class="breadcrumb-item"><a href="../user_guide/local_model_agnostic_methods.html">Local Model-Agnostic Methods</a></li>
+      <li class="breadcrumb-item active">Anchors</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/anchors.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Anchors">
+<h1>Anchors<a class="headerlink" href="#Anchors" title="Permalink to this heading"></a></h1>
+<div class="line-block">
+<div class="line">The model-agnostic system explains the behavior of complex models with high-precision rules, called anchors, representing local, “sufficient” conditions for predictions. A perturbation-based strategy is used to generate local explanations for predictions of black-box machine learning models, expressed as easy-to-understand IF-THEN rules.</div>
+<div class="line">Given - a black box model <span class="math notranslate nohighlight">\(f: X \rightarrow Y\)</span> - an instance <span class="math notranslate nohighlight">\(x \in X\)</span> - a perturbation distribution <span class="math notranslate nohighlight">\(D\)</span> of instance <span class="math notranslate nohighlight">\(x\)</span></div>
+</div>
+<div class="line-block">
+<div class="line">The rule <span class="math notranslate nohighlight">\(A\)</span> (set of predicates) is an anchor <span class="math notranslate nohighlight">\(A\)</span> if</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[E_{D_x (z|A)}[1_{f(x)=f(z)}] \geq \tau \text{ and }  A(x)=1\]</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">Since constructing particular rules is infeasible, a probabilistic definition is used:</div>
+<div class="line">Given the coverage as</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[cov(A) = E_{D(z)}[A(z)]\]</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">and the precision as</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[prec(A) = E_{D(z|A)}[1_{f(x)=f(z)}] ,\]</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">the goal is to find</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\max_{A s.t. P(prec(A) \geq \tau) \geq 1- \delta} cov(A).\]</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">Thus, one strives for a rule that has the highest coverage among all eligible rules.</div>
+</div>
+<p><strong>Literature</strong></p>
+<p>Marco Tulio Ribeiro, Sameer Singh, Carlos Guestrin. “Anchors: High-Precision Model-Agnostic Explanations.” AAAI Conference on Artificial Intelligence (AAAI), 2018</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sn</span>
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sloth</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sloth&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_colwidth&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="n">sn</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+
+
+<span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">validation_task</span><span class="o">.</span><span class="n">y_pred</span><span class="p">,:]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">selection</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="n">task</span><span class="o">.</span><span class="n">y_pred</span><span class="p">,:]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">selection</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;False&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/doeltz/doeltz/development/RiVaPy/rivapy/__init__.py:11: UserWarning: The pyvacon module is not available. You may not use all functionality without this module. Consider installing pyvacon.
+  warnings.warn(&#39;The pyvacon module is not available. You may not use all functionality without this module. Consider installing pyvacon.&#39;)
+</pre></div></div>
+</div>
+<section id="Ordinal-Values">
+<h2>Ordinal Values<a class="headerlink" href="#Ordinal-Values" title="Permalink to this heading"></a></h2>
+<section id="Data-Overview">
+<h3>Data Overview<a class="headerlink" href="#Data-Overview" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">14</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">validation_task</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">test_sets</span><span class="o">.</span><span class="n">simple_classification_ordinal</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1_000</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plot_data</span><span class="p">(</span><span class="n">validation_task</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;x: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, f: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_anchors_6_0.png" src="../_images/notebooks_anchors_6_0.png" />
+</div>
+</div>
+</section>
+<section id="id1">
+<h3>Anchors<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get a sample validation task from a synthetic credit default model</span>
+<span class="n">validation_task</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">test_sets</span><span class="o">.</span><span class="n">simple_classification_ordinal</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1_000</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">validation_task</span><span class="o">.</span><span class="n">y_pred</span><span class="p">,:]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">selection</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="n">validation_task</span><span class="o">.</span><span class="n">y_pred</span><span class="p">,:]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">selection</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;False&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">validation_task</span><span class="o">.</span><span class="n">y_pred</span><span class="o">==</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_anchors_8_0.png" src="../_images/notebooks_anchors_8_0.png" />
+</div>
+</div>
+<p>Fragestellungen - Wie wirkt sich die Diskretisierung der kontinuierlichen Werte aus? Warum erhält man je nach Verteilung unterschiedliche Anchor ? ( das liegt an den percentilen) - Wie sieht der Anchor an Punkten, die mit False klassifiziert wurden, aus? Was könnte der Grund für einen solchen Anchor sein? - Was geschieht, wenn man das 75% Quantil auf 70% setzt?</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">anchors</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">local_explainers</span><span class="o">.</span><span class="n">anchors</span><span class="o">.</span><span class="n">AnchorsAlibi</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span>
+                                                                 <span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">60</span><span class="p">],</span>
+                                                                 <span class="c1">#percentiles=[k for k in range(5,100,2)],</span>
+                                                                 <span class="n">beam_size</span><span class="o">=</span><span class="mi">10</span>
+                                                                <span class="p">)</span>
+<span class="n">anchors</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[6], line 6</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> anchors <span style="color: rgb(98,98,98)">=</span> sloth<span style="color: rgb(98,98,98)">.</span>explainers<span style="color: rgb(98,98,98)">.</span>local_explainers<span style="color: rgb(98,98,98)">.</span>anchors<span style="color: rgb(98,98,98)">.</span>AnchorsAlibi(validation_task,
+<span class="ansi-green-intense-fg ansi-bold">      2</span>                                                                  percentiles<span style="color: rgb(98,98,98)">=</span>[<span style="color: rgb(98,98,98)">25</span>,<span style="color: rgb(98,98,98)">50</span>,<span style="color: rgb(98,98,98)">60</span>],
+<span class="ansi-green-intense-fg ansi-bold">      3</span>                                                                  <span style="color: rgb(95,135,135)">#percentiles=[k for k in range(5,100,2)],</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span>                                                                  beam_size<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">10</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span>                                                                 )
+<span class="ansi-green-fg">----&gt; 6</span> anchors<span style="color: rgb(98,98,98)">.</span>explain(x<span style="color: rgb(98,98,98)">=</span>validation_task<span style="color: rgb(98,98,98)">.</span>data[p])
+
+File <span class="ansi-green-fg">~/doeltz/development/xai/xai_workshop/docs/source/notebooks/../../../sloth/explainers/local_explainers/base_local_explainer.py:23</span>, in <span class="ansi-cyan-fg">BaseLocalExplainer.explain</span><span class="ansi-blue-fg">(self, x)</span>
+<span class="ansi-green-intense-fg ansi-bold">     21</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> result_cache<span style="color: rgb(98,98,98)">.</span>get_result(hashkey)
+<span class="ansi-green-intense-fg ansi-bold">     22</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+<span class="ansi-green-fg">---&gt; 23</span>     result <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_explain(x)
+<span class="ansi-green-intense-fg ansi-bold">     24</span>     result_cache<span style="color: rgb(98,98,98)">.</span>add_result(hashkey, result)
+<span class="ansi-green-intense-fg ansi-bold">     25</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> result
+
+<span class="ansi-red-fg">TypeError</span>: AnchorsAlibi._explain() missing 1 required positional argument: &#39;predict&#39;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">anchors</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">local_explainers</span><span class="o">.</span><span class="n">anchors</span><span class="o">.</span><span class="n">AnchorsExp</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span>
+                                                                 <span class="n">discretizer</span><span class="o">=</span><span class="s1">&#39;decile&#39;</span>
+                                                                <span class="p">)</span>
+<span class="n">anchors</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">validation_task</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>anchor</th>
+      <th>precision</th>
+      <th>coverage</th>
+      <th>point</th>
+      <th>target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>x_2 &gt; 0.79 AND x_1 &gt; 0.61</td>
+      <td>1.0</td>
+      <td>0.018</td>
+      <td>[0.8977710745066665, 0.9312640661491187, 0.6167946962329223]</td>
+      <td>[True]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+</section>
+<section id="Ordinal-and-Categoric">
+<h2>Ordinal and Categoric<a class="headerlink" href="#Ordinal-and-Categoric" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get a sample validation task from a synthetic credit default model</span>
+<span class="n">validation_task_categorical</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">test_sets</span><span class="o">.</span><span class="n">simple_classification_ordinal_categorical</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1_000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">validation_task_categorical</span><span class="o">.</span><span class="n">data</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">validation_task_categorical</span><span class="o">.</span><span class="n">y_pred</span><span class="o">==</span><span class="mi">0</span><span class="p">,:]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">selection</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection</span><span class="p">[:,</span><span class="mi">4</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">validation_task_categorical</span><span class="o">.</span><span class="n">y_pred</span><span class="o">==</span><span class="mi">1</span><span class="p">,:]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">selection</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection</span><span class="p">[:,</span><span class="mi">4</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;all categories&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">validation_task_categorical</span><span class="o">.</span><span class="n">y_pred</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">selection</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">selection</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">selection</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">selection</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;category &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_anchors_14_0.png" src="../_images/notebooks_anchors_14_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">anchors</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">local_explainers</span><span class="o">.</span><span class="n">anchors</span><span class="o">.</span><span class="n">AnchorsAlibi</span><span class="p">(</span><span class="n">validation_task_categorical</span><span class="p">,</span>
+                                                                 <span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">12.0</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">,</span><span class="mf">75.0</span><span class="p">],</span>
+                                                                 <span class="c1">#percentiles=[k for k in range(5,100,2)],</span>
+                                                                 <span class="n">beam_size</span><span class="o">=</span><span class="mi">10</span>
+                                                                <span class="p">)</span>
+<span class="n">anchors</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">validation_task_categorical</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>anchor</th>
+      <th>precision</th>
+      <th>coverage</th>
+      <th>point</th>
+      <th>target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>x_5 &gt; 0.52 AND categorical = category 1 AND x_1 &gt; 0.49</td>
+      <td>0.992188</td>
+      <td>0.0232</td>
+      <td>[0.9398197043239886, 1.0, 0.0, 0.0, 0.975336015993294]</td>
+      <td>[1.0]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">validation_task_categorical</span><span class="o">.</span><span class="n">data</span>
+<span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">x</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">validation_task_categorical</span><span class="o">.</span><span class="n">y_pred</span><span class="o">==</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">anchors</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">point</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>anchor</th>
+      <th>precision</th>
+      <th>coverage</th>
+      <th>point</th>
+      <th>target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>x_5 &gt; 0.52 AND categorical = category 1 AND x_1 &gt; 0.49</td>
+      <td>0.992188</td>
+      <td>0.0232</td>
+      <td>[0.9398197043239886, 1.0, 0.0, 0.0, 0.975336015993294]</td>
+      <td>[1.0]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ice.html" class="btn btn-neutral float-left" title="Individual Conditional Expectations (ICE)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../user_guide/examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+name: sloth
+
+dependencies:
+  - python
+  - ipykernel
+  - pip
+  - matplotlib
+  - numpy
+  - pandas
+  - scipy
+  - sphinx
+  - scikit-learn
+  - seaborn
+  - shap
+  - statsmodels
+  - pip:
+    - corr-shap
+    - sphinx-rtd-theme
+    - sphinxcontrib-bibtex
+    #- jupyter_contrib_nbextensions
+    - nbsphinx
+    - notebook
+    - dice-ml
+    - sphinx-gallery
+    - alibi
+    - anchor-exp
+    - ray
+
+
+#    error: installing jupyter_contrib_nbextensions -  Building wheel for jupyter-contrib-nbextensions (setup.py)
+#    fix: downgrade pip to 21.3.1 in cmd with: python -m pip install pip==21.3.1
+#         pip install jupyter_contrib_nbextensions
+#    note: shows new depreciation warning  https://github.com/pypa/pip/issues/8368) but can still install it
+
+
+

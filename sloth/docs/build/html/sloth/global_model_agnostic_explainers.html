@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Model-Agnostic Explainers &mdash; sloth  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Local Model-Agnostic Explainers" href="local_model_agnostic_explainers.html" />
+    <link rel="prev" title="Feature Descriptions" href="features.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sloth
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="features.html">Feature Descriptions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Global Model-Agnostic Explainers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#marginal-plots">Marginal Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partial-dependence-plots">Partial Dependence Plots</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pdp">PDP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pdp2d">PDP2D</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cohort-shapley-variance">Cohort Shapley Variance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ale">ALE</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#explanation-objects">Explanation Objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#baseglobalexplanation">BaseGlobalExplanation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pdp2dexplanation">PDP2DExplanation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cohortshapleyvarianceexplanation">CohortShapleyVarianceExplanation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="local_model_agnostic_explainers.html">Local Model-Agnostic Explainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validator.html">Validator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="global_params.html">Global Settings</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sloth</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API</a></li>
+      <li class="breadcrumb-item active">Global Model-Agnostic Explainers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/sloth/global_model_agnostic_explainers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="global-model-agnostic-explainers">
+<h1>Global Model-Agnostic Explainers<a class="headerlink" href="#global-model-agnostic-explainers" title="Permalink to this heading"></a></h1>
+<section id="marginal-plots">
+<h2>Marginal Plots<a class="headerlink" href="#marginal-plots" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.MarginalPlots">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sloth.explainers.global_explainers.</span></span><span class="sig-name descname"><span class="pre">MarginalPlots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ValidationTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.MarginalPlots" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGlobalExplainer</span></code></p>
+<p>Marginal Plot explainer.</p>
+<p>Partial Dependence Plots rely on the assumption that the features being used to compute the marginal distribution are independent of the other features. If this assumption is violated, the resulting plot may be distorted and based on unrealistic data points. To mitigate this issue, one possible solution is to integrate over the conditional distribution of the other features. This is where Marginal Plots enter the game. They plot the marginal function</p>
+<div class="math notranslate nohighlight">
+\[f_S(x_S) := \int f(x_S,x_{-S})dP(x_{-S}\mid X_S)\]</div>
+<p>where <span class="math notranslate nohighlight">\(S\)</span> is an index set (usual with one or two elements) and <span class="math notranslate nohighlight">\(P(x_{-S}\mid X_S)\)</span> is the conditional density w.r.t. to fixed <span class="math notranslate nohighlight">\(X_S\)</span>.</p>
+<p>To approximate the conditional density for a certain <span class="math notranslate nohighlight">\(x_S\)</span>, we first compute bins <span class="math notranslate nohighlight">\(I_k\)</span> that contain the same number of feature points. Then, we compute the conditional density for each bin <span class="math notranslate nohighlight">\(I_k\)</span> as the average of the model values over all points in the respective bin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<em>ValidationTask</em>) – The validation task for which the explainer is computed.</p></li>
+<li><p><strong>n_steps</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of bins. Defaults to 100.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Raised when the validation task has more then one output dimension.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sloth</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validation_task</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">credit_default</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mp</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">MarginalPlots</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mp_explanation</span> <span class="o">=</span> <span class="n">pdp</span><span class="o">.</span><span class="n">explain</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mp_explanation</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.MarginalPlots.explain">
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseExplanation</span></span></span><a class="headerlink" href="#sloth.explainers.global_explainers.MarginalPlots.explain" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="partial-dependence-plots">
+<h2>Partial Dependence Plots<a class="headerlink" href="#partial-dependence-plots" title="Permalink to this heading"></a></h2>
+<section id="pdp">
+<h3>PDP<a class="headerlink" href="#pdp" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.PDP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sloth.explainers.global_explainers.</span></span><span class="sig-name descname"><span class="pre">PDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validation_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ValidationTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.PDP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGlobalExplainer</span></code></p>
+<p>One dimensional partial dependence plot for ordinal features.</p>
+<p>It approximates for a given fixed feature ..math:<cite>i</cite> the marginal effect defined by</p>
+<div class="math notranslate nohighlight">
+\[f_S(x_i) := \int f(x_i,x_{-i})dP(x_{-i})\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_{-i}\)</span> is the vector of all features except <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(P\)</span> is the distribution of the data.
+The approximation is done by simple Monte Carlo integration over the datapoints of the respective validation task</p>
+<div class="math notranslate nohighlight">
+\[f_S(x_i) \approx\frac{1}{n}\sum_k \int f(x_i,x^k_{-i})\]</div>
+<p>where <span class="math notranslate nohighlight">\(x^k_{-i}\)</span> is the k-th datapoint of the validation task without the i-th feature.</p>
+<p>Learn more in the <a class="reference internal" href="../user_guide/global_model_agnostic_methods.html#user-guide-global-methods"><span class="std std-ref">User Guide</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>validation_task</strong> (<em>ValidationTask</em>) – Validation task to be analyzed.</p></li>
+<li><p><strong>n_steps</strong> (<em>int</em>) – Number of steps used to discretize domain in coordinate of interest where the
+domain boundaries are determined by the permitted_range member of the respective feature (if set)
+or otherwise by the maximum and minimum of the feature
+values in the validation task data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If output dimension is not 1.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#pdp2d"><span class="std std-ref">PDP2D</span></a></dt><dd><p>Partial dependence plot for two features.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sloth</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validation_task</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">credit_default</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdp</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">global_explainers</span><span class="o">.</span><span class="n">PDP</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdp_explanation</span> <span class="o">=</span> <span class="n">pdp</span><span class="o">.</span><span class="n">explain</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdp_explanation</span><span class="o">.</span><span class="n">results</span>
+<span class="go">{&#39;age&#39;: {&#39;projection&#39;: array([0.00204453, 0.02012188, 0.03819923, 0.05627658, 0.07435393,</span>
+<span class="go">0.09243128, 0.11050863, 0.12858598, 0.14666333, 0.16474068,</span>
+<span class="go">0.18281802, 0.20089537, 0.21897272, 0.23705007, 0.25512742,</span>
+<span class="go">0.27320477, 0.29128212, 0.30935947, 0.32743682, 0.34551417,</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.PDP.explain">
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseExplanation</span></span></span><a class="headerlink" href="#sloth.explainers.global_explainers.PDP.explain" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.PDP.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_plots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_rug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_figure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.PDP.plot" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="pdp2d">
+<h3>PDP2D<a class="headerlink" href="#pdp2d" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.PDP2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sloth.explainers.global_explainers.</span></span><span class="sig-name descname"><span class="pre">PDP2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validation_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ValidationTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.PDP2D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGlobalExplainer</span></code></p>
+<p>Two dimensional partial dependence plot.</p>
+<p>It approximates for two given fixed features ..math:<cite>i, j</cite> the marginal effect defined by</p>
+<div class="math notranslate nohighlight">
+\[f_S(x_{i,j}) := \int f(x_{i,j},x_{-\{i,j\}})dP(x_{-\{i,j\}})\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_{-\{i,j\}}\)</span> is the vector of all features except <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>, <span class="math notranslate nohighlight">\(P\)</span> is the distribution of the data.
+The approximation is done by simple Monte Carlo integration over the datapoints of the respective validation task</p>
+<div class="math notranslate nohighlight">
+\[f_S(x_{i,j}) \approx\frac{1}{n}\sum_k \int f(x_{i,j},x^k_{-\{i,j\}})\]</div>
+<p>where the sum is over all points of the validation task without.</p>
+<p>Learn more in the <a class="reference internal" href="../user_guide/global_model_agnostic_methods.html#user-guide-global-methods"><span class="std std-ref">User Guide</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>validation_task</strong> (<em>ValidationTask</em>) – Validation task to be analyzed.</p></li>
+<li><p><strong>n_steps</strong> (<em>int</em>) – Number of steps used to discretize domain in coordinate of interest where the
+domain boundaries are determined by the permitted_range member of the respective feature (if set)
+or otherwise by the maximum and minimum of the feature
+values in the validation task data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If output dimension is not 1.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#pdp"><span class="std std-ref">PDP</span></a></dt><dd><p>Partial dependence plot for one feature.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sloth</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validation_task</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">credit_default</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdp2D</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">PDP2D</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdp2D_explanation</span> <span class="o">=</span> <span class="n">pdp2D</span><span class="o">.</span><span class="n">explain</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdp2D_explanation</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.PDP2D.explain">
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation" title="sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation"><span class="pre">PDP2DExplanation</span></a></span></span><a class="headerlink" href="#sloth.explainers.global_explainers.PDP2D.explain" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the PDP2D explanation for the validation task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The explanation of the validation task.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation" title="sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation">PDP2DExplanation</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="cohort-shapley-variance">
+<h2>Cohort Shapley Variance<a class="headerlink" href="#cohort-shapley-variance" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.CohortShapleyVariance">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sloth.explainers.global_explainers.</span></span><span class="sig-name descname"><span class="pre">CohortShapleyVariance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validation_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ValidationTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.CohortShapleyVariance" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGlobalExplainer</span></code></p>
+<p>Cohort Shapley Variance explainer.</p>
+<p>The cohot shapley method is a global explainer that computes the shapley values for each feature on the
+given data set only, avoiding sampling of new data points. This may be of of interest if the data is
+strongly correlated avoiding the creation of very unrealistic data sets that may be created by sampling.
+This class uses the cohort shapley package that must be installed separately and can be find <a class="reference external" href="https://github.com/cohortshapley/cohortshapley">here</a>.</p>
+<p>Learn more in the <a class="reference internal" href="../user_guide/global_model_agnostic_methods.html#user-guide-global-methods"><span class="std std-ref">User Guide</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>validation_task</strong> (<em>ValidationTask</em>) – Validation task to be analyzed.</p></li>
+<li><p><strong>similarity_bins</strong> (<em>int</em>) – Number of bins created for each feature.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If output dimension is not 1.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><span class="xref std std-ref">CohortShapleyValues</span></dt><dd><p>Cohort Shapley to compute individual local explanations.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sloth</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validation_task</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">test_sets</span><span class="o">.</span><span class="n">simple_regression_ordinal</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1_000</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cohort_shap_variance</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">global_explainers</span><span class="o">.</span><span class="n">CohortShapleyVariance</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span> <span class="n">similarity_bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">cohort_shap_variance</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span>
+<span class="go">(array([0.05347124, 0.05451855, 0.0041261 ]), [&#39;x_1&#39;, &#39;x_2&#39;, &#39;x_3&#39;])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.CohortShapleyVariance.explain">
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation" title="sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation"><span class="pre">CohortShapleyVarianceExplanation</span></a></span></span><a class="headerlink" href="#sloth.explainers.global_explainers.CohortShapleyVariance.explain" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="ale">
+<h2>ALE<a class="headerlink" href="#ale" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.ALE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sloth.explainers.global_explainers.</span></span><span class="sig-name descname"><span class="pre">ALE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ValidationTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.ALE" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGlobalExplainer</span></code></p>
+<p>Accumulated local effects.</p>
+<p>Accumulated local effects give an insight to the global model behaviour w.r.t. a single feature.
+For strongly correlated features, partial dependence plots may be misleading due to the influence of
+unrealistic sampled points. ALE tries to overcome this issue by dividing the domain of the feature of interest</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>validation_task</strong> (<em>ValidationTask</em>) – Validation task to be analyzed.</p></li>
+<li><p><strong>n_steps</strong> (<em>int</em>) – Number of steps used to discretize domain in coordinate of interest where the
+domain boundaries are determined by the permitted_range member of the respective feature (if set)
+or otherwise by the maximum and minimum of the feature
+values in the validation task data.</p></li>
+<li><p><strong>min_value</strong> (<em>dict</em>) – Dictionary of minimum values for each feature. If not set, the minimum value is set to the minimum value in the task data.</p></li>
+<li><p><strong>max_value</strong> (<em>dict</em>) – Dictionary of maximum values for each feature. If not set, the maximum value is set to the maximum value in the task data.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sloth</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ale</span> <span class="o">=</span> <span class="n">sloth</span><span class="o">.</span><span class="n">explainers</span><span class="o">.</span><span class="n">global_explainers</span><span class="o">.</span><span class="n">ALE</span><span class="p">(</span><span class="n">validation_task</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ale</span><span class="o">.</span><span class="n">explain</span><span class="p">()</span>
+<span class="go">{&#39;age&#39;: {&#39;boundaries&#39;: array([0.00204453, 0.02012188, 0.03819923, 0.05627658, 0.07435393,</span>
+<span class="go">0.09243128, 0.11050863, 0.12858598, 0.14666333, 0.16474068,</span>
+<span class="go">0.18281802, 0.20089537, 0.21897272, 0.23705007, 0.25512742,</span>
+<span class="go">0.27320477, 0.29128212, 0.30935947, 0.32743682, 0.34551417,</span>
+<span class="go">0.36359152, 0.38166887, 0.39974622, 0.41782357, 0.43590091,</span>
+<span class="go">0.45397826, 0.47205561, 0.49013296, 0.50821031, 0.52628766,</span>
+<span class="go">0.54436501, 0.56244236, 0.58051971, 0.59859706, 0.61667441,</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.ALE.explain">
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseExplanation</span></span></span><a class="headerlink" href="#sloth.explainers.global_explainers.ALE.explain" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="explanation-objects">
+<h1>Explanation Objects<a class="headerlink" href="#explanation-objects" title="Permalink to this heading"></a></h1>
+<section id="baseglobalexplanation">
+<h2>BaseGlobalExplanation<a class="headerlink" href="#baseglobalexplanation" title="Permalink to this heading"></a></h2>
+</section>
+<section id="pdp2dexplanation">
+<h2>PDP2DExplanation<a class="headerlink" href="#pdp2dexplanation" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sloth.explainers.global_explainers.partial_dependence_plot.</span></span><span class="sig-name descname"><span class="pre">PDP2DExplanation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ValidationTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explainer_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseExplanation</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation.add_result">
+<span class="sig-name descname"><span class="pre">add_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_name2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation.add_result" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation.df">
+<span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation.df" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_subplot_cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.partial_dependence_plot.PDP2DExplanation.plot" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="cohortshapleyvarianceexplanation">
+<h2>CohortShapleyVarianceExplanation<a class="headerlink" href="#cohortshapleyvarianceexplanation" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sloth.explainers.global_explainers.cohort_shapley_variance.</span></span><span class="sig-name descname"><span class="pre">CohortShapleyVarianceExplanation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ValidationTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explainer_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shapley_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGlobalExplanation</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation.add_result">
+<span class="sig-name descname"><span class="pre">add_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation.add_result" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation.df">
+<span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation.df" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the shapley variance values as a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Shapley variance values</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sloth.explainers.global_explainers.cohort_shapley_variance.CohortShapleyVarianceExplanation.plot" title="Permalink to this definition"></a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_subplot_cols</strong> (<em>int</em><em>, </em><em>optional</em>) – number of columns for subplots
+default: rounded root of number of features
+limited by 3</p></li>
+<li><p><strong>include_rug</strong> (<em>bool</em><em>, </em><em>optional</em>) – if True, draw and return seaborn.rug_plot at the bottom
+default: True</p></li>
+<li><p><strong>include_hist</strong> (<em>bool</em><em>, </em><em>optional</em>) – if True, draw and return matplotlib.hist
+default: True</p></li>
+<li><p><strong>features</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em>, </em><em>optional</em>) – #TODO wofür</p></li>
+<li><p><strong>hist_params</strong> (<em>dict</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
+<li><p><strong>rug_params</strong> (<em>#TODO</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – _description_</p></li>
+<li><p><strong>NotImplementedError</strong> – _description_</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="features.html" class="btn btn-neutral float-left" title="Feature Descriptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="local_model_agnostic_explainers.html" class="btn btn-neutral float-right" title="Local Model-Agnostic Explainers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

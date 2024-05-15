@@ -1,0 +1,134 @@
+{
+  "": {},
+
+  "ice": {
+    "min_values": null ,
+    "max_values": null,
+    "max_samples": null,
+    "n_steps": 20
+  },
+
+  "lime": {
+    "n_points_neighborhood": 100,
+    "stddev_eps": 10.0,
+    "alphas": [0.01, 0.1, 1.0, 10.0],
+    "max_n_features_linear_regression": 5,
+    "seed": 42,
+    "max_samples": 10
+  },
+
+  "shapley": {
+    "link": "identity",
+    "sampling": "default",
+    "sampling_kwargs": {}
+  },
+
+  "cohortshapley": {
+    "similarity_ratio": 0.1,
+    "bool_error": false
+  },
+
+  "anchorsalibi": {
+    "threshold": 0.95,
+     "epsilon_output": 0.01,
+     "percentiles": null,
+     "delta": 0.01,
+     "tau": 0.6,
+     "batch_size": 100,
+     "coverage_samples": 10000,
+     "beam_size": 3,
+     "stop_on_first": false,
+     "max_anchor_size": null,
+     "min_samples_start": 100,
+     "n_covered_ex": 10,
+     "binary_cache_size": 10000,
+     "cache_margin": 1000,
+     "verbose": false,
+     "verbose_every": 1,
+     "seed": 42
+  },
+
+  "anchorsexp": {
+    "threshold": 0.95,
+     "epsilon_output": 0.01,
+     "discretizer": "quartile",
+     "seed": 42
+  },
+
+
+  "ale": {
+    "min_value": null,
+    "max_value": null,
+    "n_steps": 10
+  },
+
+  "cohortshapleyvariance": {
+    "similarity_bins": 10
+  },
+
+  "mplot": {
+    "n_steps": 100
+  },
+
+  "pdp": {
+    "n_steps": 100
+  },
+
+  "pdp2d": {
+    "n_steps": 20
+  },
+
+  "mmd": {
+    "n_prototypes": 5,
+    "n_criticisms": 5,
+    "metric": "rbf",
+    "witness_penalty": 1.0,
+    "max_n_points": 10000,
+    "pw_kernel_kwargs": {}
+  },
+
+  "examples": {
+    "extreme_prediction": true,
+    "coordinate_extreme_points": true,
+    "mmd": true
+  },
+
+  "extremeprediction": {
+    "quantile": 0.01,
+    "max_n_points": 5
+  },
+
+  "counterfactuals": {
+    "max_counterfactuals": 2,
+    "param_method": "random",
+    "metric_weights": null
+  },
+
+  "plot": {
+    "n_subplot_cols": null,
+    "include_rug": true,
+    "include_hist": true,
+    "features": null,
+    "label": null,
+    "show": true,
+    "alpha": "auto",
+    "bins": "auto",
+    "hist_param": {}
+  },
+
+  "sub_plot": {
+    "use_subplots": true,
+    "new_figure": true,
+    "max_subplot_columns": 4
+  },
+
+  "functional_clustering": {
+    "n_clusters": null,
+    "random_state": 42,
+    "method": "agglomerative",
+    "gridwidth": 0.01,
+    "rel_tol": 0.001,
+    "distance_threshold": 0.5,
+    "sklearn_arg": {}
+  }
+}
