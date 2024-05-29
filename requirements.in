@@ -7,12 +7,3 @@ imblearn
 dalex
 plotly
 corr-shap
-sphinx-rtd-theme
-sphinxcontrib-bibtex
-nbsphinx
-notebook
-dice-ml
-sphinx-gallery
-alibi
-anchor-exp
-ray
